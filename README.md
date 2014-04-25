@@ -17,6 +17,6 @@ Configuration of Kafka Avro Sink
 Related projects
 ---------
 
-This project is inspired in [flume-ng-kafka-sink](https://github.com/baniuyao/flume-ng-kafka-sink) project. Thanks to [Baniuyao](https://github.com/baniuyao).
+This project is inspired in [flume-ng-kafka-sink](https://github.com/baniuyao/flume-ng-kafka-sink) project. Thanks to [Frank Yao](https://github.com/baniuyao).
 
 
