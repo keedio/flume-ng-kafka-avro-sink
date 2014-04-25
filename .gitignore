@@ -1,0 +1,15 @@
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+/target
+build
+bin/
+.project
+**/.springBean
+target/
+.classpath
+.settings/**
+
