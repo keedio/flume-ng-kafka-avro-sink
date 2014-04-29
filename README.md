@@ -1,13 +1,14 @@
 flume-ng-kafka-avro-sink
 ================
 
-This project is used for [flume-ng](https://github.com/apache/flume) to communicate with [kafka 0.8.0](http://kafka.apache.org/08/quickstart.html) sending Avro messages to the Kafka cluster.
+This project is used for [flume-ng](https://github.com/apache/flume) to communicate with [kafka 0.8.0](http://kafka.apache.org/08/quickstart.html) sending Avro messages to the Kafka cluster with Avro Schema Repository Server from Camus.
 
 Requirements
 ------------
 - [Linkedin Camus](https://github.com/linkedin/camus)
 - [Apache Kafka 0.8](https://github.com/apache/kafka)
 - [Apache Flume NG 1.4.0](https://github.com/apache/flume)
+- [Avro Schema Repository Server](https://github.com/buildoop/avro-schema-repo)
 
 Compile
 ---------
