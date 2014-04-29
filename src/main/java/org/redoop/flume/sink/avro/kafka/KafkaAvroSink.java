@@ -18,9 +18,14 @@
  *******************************************************************************/
 package org.redoop.flume.sink.avro.kafka;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Properties;
+
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 
+import org.apache.avro.generic.GenericData.Record;
 import org.apache.flume.Channel;
 import org.apache.flume.Context;
 import org.apache.flume.Event;
@@ -33,9 +38,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A Sink of Kafka which get events from channels and publish to Kafka. I use
- * this in our company production environment which can hit 100k messages per
- * second. <tt>zk.connect: </tt> the zookeeper ip kafka use.
+ * A Sink of Kafka which get events from channels and publish to Kafka Serialized in Avro.
+ * <tt>zk.connect: </tt> the zookeeper ip kafka use.
  * <p>
  * <tt>topic: </tt> the topic to read from kafka.
  * <p>
@@ -51,6 +55,9 @@ public class KafkaAvroSink extends AbstractSink implements Configurable {
 	private static final Logger log = LoggerFactory.getLogger(KafkaAvroSink.class);
 	private String topic;
 	private Producer<byte[], byte[]> producer;
+	private File avroSchemaFile;
+	private Properties props;
+	
 
 	public Status process() throws EventDeliveryException {
 		Channel channel = getChannel();
@@ -63,8 +70,14 @@ public class KafkaAvroSink extends AbstractSink implements Configurable {
 				return Status.READY;
 
 			}
-			producer.send(new KeyedMessage<byte[], byte[]>(this.topic, event.getBody()));
-			log.trace("Message: {}", event.getBody());
+			
+			String line = new String (event.getBody());
+			HashMap<String, Object> map = KafkaAvroSinkUtil.parseMessage(line);
+			Record record = KafkaAvroSinkUtil.fillRecord(KafkaAvroSinkUtil.fillAvroTestSchema(avroSchemaFile),map);
+			byte[] avroRecord = KafkaAvroSinkUtil.encodeMessage(topic,record,props);
+			
+	        producer.send(new KeyedMessage<byte[], byte[]>(this.topic, avroRecord));
+
 			tx.commit();
 			return Status.READY;
 		} catch (Exception e) {
@@ -74,7 +87,7 @@ public class KafkaAvroSink extends AbstractSink implements Configurable {
 			} catch (Exception e2) {
 				log.error("Rollback Exception:{}", e2);
 			}		
-			log.error("KafkaSink Exception:{}", e);
+			log.error("KafkaAvroSink Exception:{}", e);
 			return Status.BACKOFF;
 		} finally {
 			tx.close();
@@ -86,7 +99,15 @@ public class KafkaAvroSink extends AbstractSink implements Configurable {
 		if (topic == null) {
 			throw new ConfigurationException("Kafka topic must be specified.");
 		}
+		// Get schema file
+		String avroSchemaFileName = context.getString("avro.schema.file");
+		if (avroSchemaFileName == null) {
+			throw new ConfigurationException("Avro schema must be specified.");
+		}else{
+			avroSchemaFile = new File(avroSchemaFileName);
+		}
 		producer = KafkaAvroSinkUtil.getProducer(context);
+		props = KafkaAvroSinkUtil.getKafkaConfigProperties(context);
 	}
 
 	@Override

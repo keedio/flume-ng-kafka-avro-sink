@@ -18,15 +18,23 @@
  *******************************************************************************/
 package org.redoop.flume.sink.avro.kafka;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import kafka.javaapi.producer.Producer;
 import kafka.producer.ProducerConfig;
 
+import org.apache.avro.Schema;
+import org.apache.avro.generic.GenericData.Record;
+import org.apache.avro.generic.IndexedRecord;
 import org.apache.flume.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.linkedin.camus.etl.kafka.coders.KafkaAvroMessageEncoder;
 
 
 public class KafkaAvroSinkUtil {
@@ -48,6 +56,33 @@ public class KafkaAvroSinkUtil {
 		Producer<byte[], byte[]> producer;
 		producer = new Producer<byte[], byte[]>(new ProducerConfig(getKafkaConfigProperties(context)));
 		return producer;
+	}
+	
+	public static byte[] encodeMessage(String topic, IndexedRecord record, Properties props){
+    	KafkaAvroMessageEncoder encoder = new KafkaAvroMessageEncoder(topic, null);
+		encoder.init(props, topic);
+    	return encoder.toBytes(record);
+    }
+	
+	@SuppressWarnings("deprecation")
+	public static Schema fillAvroTestSchema(File jsonSchemaFile) throws IOException{
+     	//Schema.Parser schemaParser = Schema.Parser();
+    	return Schema.parse(jsonSchemaFile);
+    }
+    
+    public static Record fillRecord(Schema schema, HashMap<String, Object> map){
+		Record record = new Record(schema);
+		for ( String key : map.keySet() ) {
+		    record.put(key, map.get(key));
+		}		    	
+    	return record;
+    }
+	public static HashMap<String, Object> parseMessage(String line) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		String fields[] = line.split(" ");
+		map.put("Action", fields[0]);
+		map.put("Message", fields[1]);
+		return map;
 	}
 }
 
