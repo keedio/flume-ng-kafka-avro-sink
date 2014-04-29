@@ -28,6 +28,7 @@ Configuration of Kafka Avro Sink
     agent.sinks.kafka-avro-sink.avro.schema.file = /etc/flume/conf/schemas/testSchema.avsc
     agent.sinks.kafka-avro-sink.kafka.message.coder.schema.registry.class = com.linkedin.camus.schemaregistry.AvroRestSchemaRegistry
     agent.sinks.kafka-avro-sink.etl.schema.registry.url = http://127.0.0.1:2876/schema-repo
+    agent.sinks.kafka-avro-sink.parser.class = org.redoop.flume.sink.avro.kafka.parsers.HelloWorldParser
 
 
 Related projects

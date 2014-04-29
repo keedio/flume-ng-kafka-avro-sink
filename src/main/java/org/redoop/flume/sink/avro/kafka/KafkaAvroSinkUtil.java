@@ -31,6 +31,7 @@ import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData.Record;
 import org.apache.avro.generic.IndexedRecord;
 import org.apache.flume.Context;
+import org.redoop.flume.sink.avro.kafka.parsers.Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +40,7 @@ import com.linkedin.camus.etl.kafka.coders.KafkaAvroMessageEncoder;
 
 public class KafkaAvroSinkUtil {
 	private static final Logger log = LoggerFactory.getLogger(KafkaAvroSinkUtil.class);
+	public static final String PARSER_CLASS = "parser.class";
 
 	public static Properties getKafkaConfigProperties(Context context) {
 		log.info("context={}",context.toString());
@@ -84,6 +86,19 @@ public class KafkaAvroSinkUtil {
 		map.put("Message", fields[1]);
 		return map;
 	}
+	
+	public static HashMap<String, Object> parseMessage(Properties props, String line) {
+		try {
+			Parser parser = (Parser) Class.forName(props.getProperty(PARSER_CLASS)).newInstance();
+			return parser.init(line);			
+		} catch (Exception e) {
+			log.error("KafkaAvroUtilSink Exception:{}", e);
+			return null;
+		}
+		
+	}
+	
+	
 }
 
 
