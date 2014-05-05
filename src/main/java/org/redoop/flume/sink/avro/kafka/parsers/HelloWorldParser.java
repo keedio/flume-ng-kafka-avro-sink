@@ -23,6 +23,7 @@ import java.util.HashMap;
 
 public class HelloWorldParser implements Parser {
 
+	@Override
 	public HashMap<String, Object> init(String line) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		String fields[] = line.split(" ");
