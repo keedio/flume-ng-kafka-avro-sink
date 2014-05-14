@@ -72,7 +72,6 @@ public class KafkaAvroSink extends AbstractSink implements Configurable {
 			}
 			
 			String line = new String (event.getBody());
-			//HashMap<String, Object> map = KafkaAvroSinkUtil.parseMessage(line);
 			HashMap<String, Object> map = KafkaAvroSinkUtil.parseMessage(props,line);
 			Record record = KafkaAvroSinkUtil.fillRecord(KafkaAvroSinkUtil.fillAvroTestSchema(avroSchemaFile),map);
 			byte[] avroRecord = KafkaAvroSinkUtil.encodeMessage(topic,record,props);

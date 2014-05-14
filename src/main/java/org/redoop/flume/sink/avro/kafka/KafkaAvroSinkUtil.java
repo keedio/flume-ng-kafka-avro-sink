@@ -79,14 +79,7 @@ public class KafkaAvroSinkUtil {
 		}		    	
     	return record;
     }
-	public static HashMap<String, Object> parseMessage(String line) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		String fields[] = line.split(" ");
-		map.put("Action", fields[0]);
-		map.put("Message", fields[1]);
-		return map;
-	}
-	
+    
 	public static HashMap<String, Object> parseMessage(Properties props, String line) {
 		try {
 			Parser parser = (Parser) Class.forName(props.getProperty(PARSER_CLASS)).newInstance();
