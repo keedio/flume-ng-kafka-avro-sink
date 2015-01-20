@@ -5,12 +5,12 @@
   <parent>
     <groupId>org.apache.flume</groupId>
     <artifactId>flume-ng-sinks</artifactId>
-    <version>1.4.0</version>
+    <version>1.5.2</version>
   </parent>
 
   <groupId>org.apache.flume.flume-ng-sinks</groupId>
   <artifactId>flume-ng-kafka-avro-sink</artifactId>
-  <version>1.4.0</version>
+  <version>1.5.2</version>
   
   <repositories>  
     <repository>
