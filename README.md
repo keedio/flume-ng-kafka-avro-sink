@@ -7,7 +7,7 @@ Requirements
 ------------
 - [Linkedin Camus](https://github.com/linkedin/camus)
 - [Apache Kafka 0.8](https://github.com/apache/kafka)
-- [Apache Flume NG 1.4.0](https://github.com/apache/flume)
+- [Apache Flume NG 1.5.2](https://github.com/apache/flume)
 - [Avro Schema Repository Server](https://github.com/buildoop/avro-schema-repo)
 
 Compile
